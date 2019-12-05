@@ -21,7 +21,10 @@ include_once 'inc/connector.php'
   .form-section,
   .table-display {
     width: 40%;
-    margin: auto;
+    margin:2px auto;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0, .3);
   }
 
   .form-group {
@@ -39,33 +42,55 @@ include_once 'inc/connector.php'
 
 <body>
   <section class="form-section">
+    <h2 class="form-title">Enter New Book</h2>
     <form id="add-form" action="index.php" method="POST">
       <div class="form-group">
-        <label>Title</label>
+        <label>Title:</label>
         <input type="text" name="title">
       </div>
       <div class="form-group">
-        <label>Author</label>
+        <label>Author:</label>
         <input type="text" name="author">
       </div>
       <div class="form-group">
-        <input type="submit" name="submitadd">
+        <input type="submit" name="submitadd" value="Submit New Book">
       </div>
       <br>
     </form>
+    <h2 class="form-title">Remove A Book</h2>
     <form id="del-form" action="index.php" method="POST">
       <div class="form-group">
         <label>Delete book by id:</label>
         <input type="text" name="id">
       </div>
       <div class="form-group">
-        <input type="submit" name="submitdel">
+        <input type="submit" name="submitdel" value="Delete Book">
       </div>
       <br>
     </form>
-  </section>
+    <h2 class="form-title">Edit A Book</h2>
+    <form id="edit-form" action="index.php" method="POST">
+      <div class="form-group">
+      	<label>ID of book to edit:</label>
+	<input type="text" name="id">
+      </div>
+      <div class="form-group">
+        <label>New Title:</label>
+        <input type="text" name="title">
+      </div>
+      <div class="form-group">
+        <label>New Author:</label>
+        <input type="text" name="author">
+      </div>
+      <div class="form-group">
+        <input type="submit" name="submitedit" value="Edit Book">
+      </div>
+      <br>
+    </form>
+</section>
 
   <section class="table-display">
+    <h2 class="form-title">Database Library</h2>
     <p><?php echo getAllBooks($conn, $tableName) ?></p>
   </section>
 </body>
