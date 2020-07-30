@@ -5,7 +5,7 @@ $dbUsername = "luciens";
 $dbPassword = "dalemace";
 
 $dbName = "lampdemo";
-$tableName = "books";
+$tableName = "addressbook";
 
 $encThumbprint = "abc-123+";
 
@@ -36,20 +36,23 @@ function createTable($conn, $tableName)
 	$ok = true;
 	$maintable = "create table if not exists " . $tableName . " (
 		id int(6) unsigned auto_increment primary key,
- 		title text,
- 		author text
+ 		name text,
+		 address text,
+		 email text,
+		 phone text
 	)";
 	return $conn->query($maintable);
 }
 
 function getAllBooks($conn, $tableName)
 {
+	global $encThumbprint;
 	$sql = "select * from " . $tableName;
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
-		$text = "<table id='results-table'><tr><th>ID</th><th>Title</th><th>Author</th></tr>";
+		$text = "<table id='results-table'><tr><th>ID</th><th>Name</th><th>Address</th><th>Email</th><th>Phone</th></tr>";
 		while ($row = $result->fetch_assoc()) {
-			$text .= "<tr><td>" . $row['id'] . "</td><td>" . decryptText($row['title'],$encThumbprint) . "</td><td>" . decryptText($row['author'],$thumbPrint) . "</td></tr>";
+			$text .= "<tr><td>" . $row['id'] . "</td><td>" . decryptText($row['name'],$encThumbprint) . "</td><td>" . decryptText($row['address'],$encThumbprint) . "</td><td>". decryptText($row['email'],$encThumbprint) ."</td><td>". decryptText($row['phone'],$encThumbprint) . "</td></tr>";
 		}
 		$text .= "</table>";
 		return $text;
@@ -58,9 +61,11 @@ function getAllBooks($conn, $tableName)
 	}
 }
 
-function addBook($conn, $tableName, $title, $author)
+function addBook($conn, $tableName, $name, $address,$email,$phone)
 {
-	$sql = "insert into " . $tableName . " ( title, author ) values ( '" .encryptText($title,$encThumbprint) . "', '" .encryptText($author,$encThumbprint) . "' )";
+	global $encThumbprint;
+	
+	$sql = "insert into " . $tableName . " ( name, address, email, phone ) values ( '" .encryptText($name,$encThumbprint) . "', '" .encryptText($address,$encThumbprint) . "', '" .encryptText($email,$encThumbprint) . "', '" .encryptText($phone,$encThumbprint) . "')";
 	return $conn->query($sql);
 }
 
@@ -70,21 +75,26 @@ function deleteBook($conn, $tableName, $id)
 	return $conn->query($sql);
 }
 
-function updateBook($conn, $tableName, $id, $newTitle, $newAuthor){
-	 $newTitle = encryptText($newTitle,$encThumbprint);
-	 $newAuthor = encryptText($newAuthor,$encThumbprint);
+function updateBook($conn, $tableName, $id, $newname, $newaddress, $newemail,$newphone){
+	global $encThumbprint;
+	 $newname = encryptText($newname,$encThumbprint);
+	 $newaddress = encryptText($newaddress,$encThumbprint);
+	 $newemail = encryptText($newemail,$encThumbprint);
+	 $newphone = encryptText($newphone,$encThumbprint);
 	 
-	$sql="update {$tableName} set title='{$newTitle}', author='{$newAuthor}' where id={$id}";
+	$sql="update {$tableName} set name='{$newname}', address='{$newaddress}', email='{$newemail}', phone='{$newphone}' where id={$id}";
 	return $conn->query($sql);
 }
 $conn = connectToDb($dbServername, $dbUsername, $dbPassword, $dbName);
 
 createTable($conn, $tableName);
 
-if ($_REQUEST['submitadd'] and $_REQUEST['title'] and $_REQUEST['author']) {
-	addBook($conn, $tableName, $_REQUEST['title'], $_REQUEST['author']);
-} elseif ($_REQUEST['submitdel'] and $_REQUEST['id']) {
+if (array_key_exists('submitadd',$_REQUEST) and $_REQUEST['name'] and $_REQUEST['address'] and $_REQUEST['email'] and $_REQUEST['phone']) {
+	addBook($conn, $tableName, $_REQUEST['name'], $_REQUEST['address'], $_REQUEST['email'],$_REQUEST['phone']);
+} 
+if (array_key_exists('submitdel',$_REQUEST) and $_REQUEST['id']) {
 	deleteBook($conn, $tableName, $_REQUEST['id']);
-}elseif ($_REQUEST['submitedit'] and $_REQUEST['id'] and $_REQUEST['title']and $_REQUEST['author']){
-	updateBook($conn, $tableName, $_REQUEST['id'], $_REQUEST['title'], $_REQUEST['author']);
+}
+if (array_key_exists('submitedit',$_REQUEST) and $_REQUEST['name']and $_REQUEST['address'] and $_REQUEST['email'] and $_REQUEST['phone']){
+	updateBook($conn, $tableName, $_REQUEST['id'], $_REQUEST['name'], $_REQUEST['address'], $_REQUEST['email'], $_REQUEST['phone']);
 }

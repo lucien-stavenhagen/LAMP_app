@@ -42,22 +42,30 @@ include_once 'inc/connector.php'
 
 <body>
   <section class="form-section">
-    <h2 class="form-title">Enter New Book</h2>
+    <h2 class="form-title">Enter New Address</h2>
     <form id="add-form" action="index.php" method="POST">
       <div class="form-group">
-        <label>Title:</label>
-        <input type="text" name="title">
+        <label>Name:</label>
+        <input type="text" name="name">
       </div>
       <div class="form-group">
-        <label>Author:</label>
-        <input type="text" name="author">
+        <label>Address:</label>
+        <input type="text" name="address">
+      </div>
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="text" name="email">
+      </div>
+      <div class="form-group">
+        <label>Phone:</label>
+        <input type="text" name="phone">
       </div>
       <div class="form-group">
         <input type="submit" name="submitadd" value="Submit New Book">
       </div>
       <br>
     </form>
-    <h2 class="form-title">Remove A Book</h2>
+    <h2 class="form-title">Remove An Address</h2>
     <form id="del-form" action="index.php" method="POST">
       <div class="form-group">
         <label>Delete book by id:</label>
@@ -68,19 +76,27 @@ include_once 'inc/connector.php'
       </div>
       <br>
     </form>
-    <h2 class="form-title">Edit A Book</h2>
+    <h2 class="form-title">Edit An Address</h2>
     <form id="edit-form" action="index.php" method="POST">
       <div class="form-group">
       	<label>ID of book to edit:</label>
 	<input type="text" name="id">
       </div>
       <div class="form-group">
-        <label>New Title:</label>
-        <input type="text" name="title">
+        <label>New Address:</label>
+        <input type="text" name="name">
       </div>
       <div class="form-group">
         <label>New Author:</label>
-        <input type="text" name="author">
+        <input type="text" name="address">
+      </div>
+      <div class="form-group">
+        <label>New Email:</label>
+        <input type="text" name="email">
+      </div>
+      <div class="form-group">
+        <label>New Phone:</label>
+        <input type="text" name="phone">
       </div>
       <div class="form-group">
         <input type="submit" name="submitedit" value="Edit Book">
@@ -90,7 +106,7 @@ include_once 'inc/connector.php'
 </section>
 
   <section class="table-display">
-    <h2 class="form-title">Database Library</h2>
+    <h2 class="form-title">Addresses In Database</h2>
     <p><?php echo getAllBooks($conn, $tableName) ?></p>
   </section>
 </body>
