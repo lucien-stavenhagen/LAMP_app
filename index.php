@@ -20,11 +20,12 @@ include_once 'inc/connector.php'
 
   .form-section,
   .table-display {
-    width: 40%;
+    width: 80%;
     margin:2px auto;
     padding: 15px;
     border-radius: 4px;
     border: 1px solid rgba(0,0,0, .3);
+    overflow: auto;
   }
 
   .form-group {
@@ -49,8 +50,20 @@ include_once 'inc/connector.php'
         <input type="text" name="name">
       </div>
       <div class="form-group">
-        <label>Address:</label>
+        <label>Street Address:</label>
         <input type="text" name="address">
+      </div>
+      <div class="form-group">
+        <label>City:</label>
+        <input type="text" name="city">
+      </div>
+      <div class="form-group">
+        <label>State:</label>
+        <input type="text" name="state">
+      </div>
+      <div class="form-group">
+        <label>Zipcode:</label>
+        <input type="text" name="zipcode">
       </div>
       <div class="form-group">
         <label>Email:</label>
@@ -61,7 +74,7 @@ include_once 'inc/connector.php'
         <input type="text" name="phone">
       </div>
       <div class="form-group">
-        <input type="submit" name="submitadd" value="Submit New Book">
+        <input type="submit" name="submitadd" value="Submit">
       </div>
       <br>
     </form>
@@ -72,10 +85,11 @@ include_once 'inc/connector.php'
         <input type="text" name="id">
       </div>
       <div class="form-group">
-        <input type="submit" name="submitdel" value="Delete Book">
+        <input type="submit" name="submitdel" value="Delete">
       </div>
       <br>
     </form>
+    <!--
     <h2 class="form-title">Edit An Address</h2>
     <form id="edit-form" action="index.php" method="POST">
       <div class="form-group">
@@ -103,6 +117,7 @@ include_once 'inc/connector.php'
       </div>
       <br>
     </form>
+    -->
 </section>
 
   <section class="table-display">
