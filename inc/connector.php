@@ -52,25 +52,24 @@ function createTable($conn, $tableName)
 
 function getAllBooks($conn, $tableName)
 {
-	global $encThumbprint;
 	$offset = 0;
 	$pagesize = 3;
 	$page = 1;
+	$finished = false;
 	$text = "<table id='results-table'><tr><th>Page</th><th>ID</th><th>Name</th><th>Street Address</th><th>City</th><th>State</th><th>Zipcode</th><th>Email</th><th>Phone</th></tr>";
-	do {
-		$text .= "<tr><td>".$page."</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+	while(1) {
 		$pagesql = "select * from " . $tableName . " limit " . $offset . ", " . $pagesize;
 		$result = $conn->query($pagesql);
-		if ($result->num_rows > 0) {
-			while ($row = $result->fetch_assoc()) {
-				$text .= "<tr><td> </td><td>". $row['id'] . "</td><td>" . $row['name'] . "</td><td>" . $row['address'] . "</td><td>" . $row['city'] . "</td><td>" . $row['state'] . "</td><td>" . $row['zipcode'] . "</td><td>" . $row['email'] . "</td><td>" . $row['phone'] . "</td></tr>";
-			}
-		} else {
-			$text .= "<ul><li>No results found.</li></ul>";
+		if ($result->num_rows == 0) {
+			break;
+		}
+		$text .= "<tr><td>" . $page . "</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+		while ($row = $result->fetch_assoc()) {
+			$text .= "<tr><td> </td><td>" . $row['id'] . "</td><td>" . $row['name'] . "</td><td>" . $row['address'] . "</td><td>" . $row['city'] . "</td><td>" . $row['state'] . "</td><td>" . $row['zipcode'] . "</td><td>" . $row['email'] . "</td><td>" . $row['phone'] . "</td></tr>";
 		}
 		$offset += $pagesize;
 		$page++;
-	} while ($result->num_rows >= $offset);
+	}
 	$text .= "</table>";
 
 	return $text;
