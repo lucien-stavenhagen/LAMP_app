@@ -53,31 +53,34 @@ function createTable($conn, $tableName)
 function getAllBooks($conn, $tableName)
 {
 	global $encThumbprint;
-	$offset = 1;
-	$pagesize = 1;
-
-	$sql = "select * from " . $tableName;
-	$pagesql = $sql . " limit " . $offset . ", " . $pagesize;
-#	$result = $conn->query($pagesql);
-	$result = $conn->query($sql);
-	if ($result->num_rows > 0) {
-		$text = "<table id='results-table'><tr><th>ID</th><th>Name</th><th>Street Address</th><th>City</th><th>State</th><th>Zipcode</th><th>Email</th><th>Phone</th></tr>";
-		while ($row = $result->fetch_assoc()) {
-			$text .= "<tr><td>" . $row['id'] . "</td><td>" . $row['name'] . "</td><td>" . $row['address'] . "</td><td>" . $row['city'] ."</td><td>". $row['state'] . "</td><td>".$row['zipcode']. "</td><td>". $row['email'] ."</td><td>". $row['phone'] . "</td></tr>";
+	$offset = 0;
+	$pagesize = 3;
+	$page = 1;
+	$text = "<table id='results-table'><tr><th>Page</th><th>ID</th><th>Name</th><th>Street Address</th><th>City</th><th>State</th><th>Zipcode</th><th>Email</th><th>Phone</th></tr>";
+	do {
+		$text .= "<tr><td>".$page."</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+		$pagesql = "select * from " . $tableName . " limit " . $offset . ", " . $pagesize;
+		$result = $conn->query($pagesql);
+		if ($result->num_rows > 0) {
+			while ($row = $result->fetch_assoc()) {
+				$text .= "<tr><td> </td><td>". $row['id'] . "</td><td>" . $row['name'] . "</td><td>" . $row['address'] . "</td><td>" . $row['city'] . "</td><td>" . $row['state'] . "</td><td>" . $row['zipcode'] . "</td><td>" . $row['email'] . "</td><td>" . $row['phone'] . "</td></tr>";
+			}
+		} else {
+			$text .= "<ul><li>No results found.</li></ul>";
 		}
-		$result->free();
-		$text .= "</table>";
-		return $text;
-	} else {
-		return "<ul><li>No results found.</li></ul>";
-	}
+		$offset += $pagesize;
+		$page++;
+	} while ($result->num_rows >= $offset);
+	$text .= "</table>";
+
+	return $text;
 }
 
-function addBook($conn, $tableName, $name, $address,$city, $state, $zipcode, $email,$phone)
+function addBook($conn, $tableName, $name, $address, $city, $state, $zipcode, $email, $phone)
 {
 	global $encThumbprint;
-	
-	$sql = "insert into " . $tableName . " ( name, address, city, state, zipcode, email, phone ) values ( '" .$name . "', '" .$address. "', '" .$city. "', '" .$state. "', '" .$zipcode. "', '" .$email. "', '" .$phone. "')";
+
+	$sql = "insert into " . $tableName . " ( name, address, city, state, zipcode, email, phone ) values ( '" . $name . "', '" . $address . "', '" . $city . "', '" . $state . "', '" . $zipcode . "', '" . $email . "', '" . $phone . "')";
 	return $conn->query($sql);
 }
 
@@ -97,10 +100,9 @@ $conn = connectToDb($dbServername, $dbUsername, $dbPassword, $dbName);
 
 createTable($conn, $tableName);
 
-if (array_key_exists('submitadd',$_REQUEST) and $_REQUEST['name'] and $_REQUEST['address']  and $_REQUEST['city'] and $_REQUEST['state'] and $_REQUEST['zipcode'] and $_REQUEST['email'] and $_REQUEST['phone']) {
-	addBook($conn, $tableName, $_REQUEST['name'], $_REQUEST['address'], $_REQUEST['city'], $_REQUEST['state'],$_REQUEST['zipcode'],$_REQUEST['email'],$_REQUEST['phone']);
-} 
-if (array_key_exists('submitdel',$_REQUEST) and $_REQUEST['id']) {
+if (array_key_exists('submitadd', $_REQUEST) and $_REQUEST['name'] and $_REQUEST['address']  and $_REQUEST['city'] and $_REQUEST['state'] and $_REQUEST['zipcode'] and $_REQUEST['email'] and $_REQUEST['phone']) {
+	addBook($conn, $tableName, $_REQUEST['name'], $_REQUEST['address'], $_REQUEST['city'], $_REQUEST['state'], $_REQUEST['zipcode'], $_REQUEST['email'], $_REQUEST['phone']);
+}
+if (array_key_exists('submitdel', $_REQUEST) and $_REQUEST['id']) {
 	deleteBook($conn, $tableName, $_REQUEST['id']);
 }
-
